@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:xm="http://www.w3.org/1999/xhtml" th:fragment="content">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrapValidator.min.css">
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/bootstrapValidator.min.js"></script>
+    <script>
+    function addCompany() {
+        url = ''
+        if ($("input[name='state']:checked").val() == 1) {
+            url = 'addCrediableCompany'
+        }
+        else {
+            url = 'addUnkownCompany'
+        }
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                "id": $("#idAddress").val(),
+                "name": $("#companyName").val(),
+                "property": $("#companyAddress").val(),
+                "ad": $("#companyProperty").val(),
+            }, success:function(msg) {
+                alert(msg);
+                location.reload();
+            }, error:function(msg) {
+                alert(msg);
+                location.reload();
+            }
+        });
+    }
+    </script>
+    <style>
+
+        .bgColor{
+            background-color:rgba(243,66,111,0.15)
+        }
+        .divBorder{
+            border: solid 1px rgba(12,24,255,0.15);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+        .h4font{
+            margin-top: 0px;
+            font-family: 微软雅黑;
+            font-weight: 600;
+        }
+        .special {
+            border: solid 1px rgba(12,24,255,0.15);
+            padding: 1px;
+            margin-top: 1px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+
+
+
+</head>
+<body >
+<div class="container-fluid panel-body" style="padding-bottom:0px">
+    <script>
+        $("#transaction").addClass("active");
+        $("#addCompany").addClass("active");
+    </script>
+    <form class="form-horizontal" id="formAdd" action="#" xm:action="@{/customer/add}" method="post">
+
+        <div class="panel panel-default" style="margin-bottom: 0px">
+            <h4 class="panel panel-heading h4font">
+                角色配置
+                <small>（*星号是必填项）</small>
+            </h4>
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-1 control-label"><span style="color: red;font-weight: bold">＊</span>区块链地址</label>
+                    <div class="col-sm-4">
+                        <input id="idAddress" type="text" class="form-control" name="name" placeholder="区块链地址" value="">
+                    </div>
+                    <label class="control-label">（该项为添加公司的40位区块链地址，为该公司的id）</label>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-1 control-label"><span style="color: red;font-weight: bold">＊</span>公司名字</label>
+                    <div class="col-sm-4">
+                        <input id="companyName" type="text" class="form-control" name="userName" placeholder="公司名字">
+                    </div>
+                    <label class="control-label">（输入公司名字）</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label"><span style="color: red;font-weight: bold">＊</span>信用</label>
+
+                    <div class="col-sm-11">
+
+                        <label class="radio-inline">
+                            <input type="radio"  value="1" name="state">信用
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio"  value="0" name="state" checked>未知
+                        </label>
+                        <label class="control-label">（输入该公司的信用程度，只有信用认证公司可用）</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">公司地址</label>
+                    <div class="col-sm-4">
+                        <input id="companyAddress" type="text" class="form-control" name="createTime" placeholder="公司地址">
+                    </div>
+                    <label class="control-label">(输入公司的地址)</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">公司性质</label>
+                    <div class="col-sm-4">
+                        <input id="companyProperty" type="text" class="form-control" name="createTime" placeholder="公司性质">
+                    </div>
+                    <label class="control-label">(输入公司的性质)</label>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <div class="form-group">
+            <div class="col-sm-offset-5 col-sm-1">
+                <button type="button" class="btn btn-primary" onclick="addCompany()">提交</button>
+            </div>
+
+            <div class="col-sm-1">
+                <button type="reset" class="btn btn-primary">重写</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

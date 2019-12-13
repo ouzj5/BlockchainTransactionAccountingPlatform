@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:xm="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .bgColor {
+            background-color: rgba(243, 66, 111, 0.15)
+        }
+
+        .divBorder {
+            border: solid 1px rgba(12, 24, 255, 0.15);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+
+        .h4font {
+            margin-top: 0px;
+            font-family: 微软雅黑;
+            font-weight: 600;
+        }
+
+        .special {
+            border: solid 1px rgba(12, 24, 255, 0.15);
+            padding: 1px;
+            margin-top: 1px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        function addCompany() {
+            $.ajax({
+                type: 'POST',
+                url: "signup",
+                data: {
+                    "name": $("#companyName").val(),
+                    "password": $("#p12signupP").val(),
+                    "usep12": $("input[name='state']:checked").val(),
+                    "property": $("#companyAddress").val(),
+                    "ad": $("#companyProperty").val(),
+                }, success:function(data) {
+                    alert(data);
+                    window.location.href = "download";
+                }, error:function(data) {
+                    alert("注册失败");
+                    location.reload();
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+<div class="container">
+    <form class="form-horizontal" id="formAdd" action="#" xm:action="@{/customer/add}" method="post">
+        <div class="panel panel-default divBorder" style="margin-bottom: 0px">
+            <h4 class="panel panel-heading h4font">
+                公司注册
+                <small>（*星号是必填项）</small>
+            </h4>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-1 control-label"><span style="color: red;font-weight: bold">＊</span>公司名字</label>
+                    <div class="col-sm-4">
+                        <input id="companyName" type="text" class="form-control" name="userName" placeholder="公司名字" required>
+                    </div>
+                    <label class="control-label">（输入公司名字）</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label"><span style="color: red;font-weight: bold">＊</span>选择密钥格式</label>
+
+                    <div class="col-sm-11">
+
+                        <label class="radio-inline">
+                            <input type="radio"  value="1" name="state">p12文件
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio"  value="0" name="state" checked>pem文件
+                        </label>
+                        <label class="control-label">（选用一种密钥文件格式）</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">p12文件密码</label>
+                    <div class="col-sm-4">
+                        <input id="p12signupP" type="text" class="form-control" name="createTime" placeholder="输入p12文件密码">
+                    </div>
+                    <label class="control-label">(p12格式文件需要提供一个密码)</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">公司地址</label>
+                    <div class="col-sm-4">
+                        <input id="companyAddress" type="text" class="form-control" name="createTime" placeholder="公司地址">
+                    </div>
+                    <label class="control-label">(输入公司的地址)</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">公司性质</label>
+                    <div class="col-sm-4">
+                        <input id="companyProperty" type="text" class="form-control" name="createTime" placeholder="公司性质">
+                    </div>
+                    <label class="control-label">(输入公司的性质)</label>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <div class="form-group">
+            <div class="col-sm-offset-5 col-sm-1">
+                <button type="button" class="btn btn-primary btn-lg" onclick="addCompany()">提交</button>
+            </div>
+
+            <div class="col-sm-1">
+                <button type="reset" class="btn btn-primary btn-lg">重写</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

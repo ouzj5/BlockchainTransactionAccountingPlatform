@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .dl {
+        text-decoration: none;
+        color: rgba(255,255,255,1);
+    }
+</style>
+<body>
+
+<script>
+    $("#Download").addClass("active");
+</script>
+<div th:fragment="content">
+    <div th:text="${address}"></div>
+        <button class="btn btn-primary btn-lg"><a style="color: white" th:href="@{getaccount(account=${PrKey})}">私钥文件</a></button>
+        <button class="btn btn-primary btn-lg"><a style="color: white" th:href="@{getaccount(account=${PlKey})}">公钥文件</a></button>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Title</title>
+</head>
+<body>
+
+<div th:fragment="content">
+    <script>
+    $("#Mycplist").addClass("active");
+</script>
+    <table class="table table-striped">
+        <caption>公司信息</caption>
+        <thead>
+        <tr>
+            <th>公司名字</th>
+            <th>公司地址</th>
+            <th>公司性质</th>
+            <th>信用等级</th>
+            <th>区块链id地址</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="re : ${c_list}">
+            <td th:text="${re.name}">
+            <td th:text="${re.add}">
+            <td th:text="${re.property}">
+            <td th:text="${re.credit}">
+            <td th:text="${re.address}">
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+<script>
+</script>
+</html>
