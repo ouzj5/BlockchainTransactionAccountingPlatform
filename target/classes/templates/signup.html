@@ -45,9 +45,15 @@
                     "usep12": $("input[name='state']:checked").val(),
                     "property": $("#companyAddress").val(),
                     "ad": $("#companyProperty").val(),
-                }, success:function(data) {
-                    alert(data);
-                    window.location.href = "download";
+                }, success:function(msg) {
+                alert(msg.msg);
+                    if (msg.status == "success") {
+                        window.location.href = "download";
+                    }
+                    else {
+                        location.reload();
+                    }
+
                 }, error:function(data) {
                     alert("注册失败");
                     location.reload();

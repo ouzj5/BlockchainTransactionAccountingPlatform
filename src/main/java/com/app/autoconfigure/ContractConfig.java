@@ -2,6 +2,7 @@ package com.app.autoconfigure;
 
 import com.app.constants.GasConstants;
 import com.app.solidity.Finance;
+import com.app.util.ContractUtil;
 import org.fisco.bcos.web3j.crypto.Credentials;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.tx.gas.StaticGasProvider;
@@ -34,8 +35,8 @@ public class ContractConfig {
             bos.flush();
             return fin;
         }
-
     }
+
     public String getName(){
         return name;
     }

@@ -32,6 +32,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class SignupController {
@@ -42,18 +44,23 @@ public class SignupController {
     @Autowired
     Finance finance;
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public ResponseEntity<String>  signup(HttpServletRequest req,
-                               @RequestParam(name="name",defaultValue = "")String name,
-                               @RequestParam(name="property",defaultValue = "")String property,
-                               @RequestParam(name="ad", defaultValue = "")String ad,
-                               @RequestParam(name="usep12", defaultValue = "")String usep12,
-                               @RequestParam(name="password", defaultValue = "")String password){
+    public ResponseEntity<Map<String, Object>>  signup(HttpServletRequest req,
+                                                       @RequestParam(name="name",defaultValue = "")String name,
+                                                       @RequestParam(name="property",defaultValue = "")String property,
+                                                       @RequestParam(name="ad", defaultValue = "")String ad,
+                                                       @RequestParam(name="usep12", defaultValue = "")String usep12,
+                                                       @RequestParam(name="password", defaultValue = "")String password){
+        Map<String, Object> map = new HashMap<String, Object>();
         try {
             if (name.length() == 0) {
-                return new ResponseEntity<String>("请输入公司名字", HttpStatus.FORBIDDEN);
+                map.put("status", "error");
+                map.put("msg", "请输入公司名字");
+                return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
             }
             if (nameToAddress(name) != null) {
-                return new ResponseEntity<String>("已经添加过", HttpStatus.FORBIDDEN);
+                map.put("status", "error");
+                map.put("msg", "已经添加过");
+                return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
             }
             GenerateAccount ac = new GenerateAccount();
             String format = "";
@@ -72,7 +79,9 @@ public class SignupController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<String>( "注册成功", HttpStatus.OK);
+        map.put("status", "success");
+        map.put("msg", "注册成功");
+        return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
     }
 
     @RequestMapping("blocknum")

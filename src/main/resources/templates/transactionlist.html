@@ -25,15 +25,17 @@
         <th>债务所属公司</th>
         <th>欠债公司</th>
         <th>债务金额</th>
+        <th>债务余额</th>
         <th>债务状态</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="re : ${t_list}">
-        <td th:text="${re.from}">
-        <td th:text="${re.to}">
-        <td th:text="${re.mount}">
-        <td th:text="${re.state}">
+        <td th:text="${re.from}"></td>
+        <td th:text="${re.to}"></td>
+        <td th:text="${re.origin}"></td>
+        <td th:text="${re.mount}"></td>
+        <td th:text="${re.state}"></td>
     </tr>
     </tbody>
 </table>

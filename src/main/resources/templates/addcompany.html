@@ -13,11 +13,11 @@
     <script>
     function addCompany() {
         url = ''
-        if ($("input[name='state']:checked").val() == 1) {
-            url = 'addCrediableCompany'
+        if ($("input[name='state']:checked").val() == 0) {
+            url = 'addUnkownCompany'
         }
         else {
-            url = 'addUnkownCompany'
+            url = 'addCrediableCompany'
         }
         $.ajax({
             type: 'POST',
@@ -27,11 +27,13 @@
                 "name": $("#companyName").val(),
                 "property": $("#companyAddress").val(),
                 "ad": $("#companyProperty").val(),
+                "state": $("input[name='state']:checked").val(),
             }, success:function(msg) {
-                alert(msg);
+                alert(msg.msg);
                 location.reload();
             }, error:function(msg) {
-                alert(msg);
+                console.log(msg);
+                alert(msg.body);
                 location.reload();
             }
         });
@@ -99,13 +101,16 @@
                     <label class="col-sm-1 control-label"><span style="color: red;font-weight: bold">＊</span>信用</label>
 
                     <div class="col-sm-11">
-
+                        <label class="radio-inline">
+                            <input type="radio"  value="5" name="state" checked>银行
+                        </label>
                         <label class="radio-inline">
                             <input type="radio"  value="1" name="state">信用
                         </label>
                         <label class="radio-inline">
                             <input type="radio"  value="0" name="state" checked>未知
                         </label>
+
                         <label class="control-label">（输入该公司的信用程度，只有信用认证公司可用）</label>
                     </div>
                 </div>

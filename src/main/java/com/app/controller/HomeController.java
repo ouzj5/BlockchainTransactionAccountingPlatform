@@ -1,6 +1,8 @@
 package com.app.controller;
 
+import com.app.util.ContractUtil;
 import org.bouncycastle.math.raw.Mod;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class HomeController {
+    @Autowired
+    ContractUtil contractUtil;
     @RequestMapping(value ="home", method = RequestMethod.GET)
     public ModelAndView home(HttpServletRequest req){
         ModelAndView mv = getView(req);
@@ -28,7 +32,10 @@ public class HomeController {
     public ModelAndView transaction(HttpServletRequest req) {
         ModelAndView mv = getView(req);
         mv.addObject("page", "transaction");
-        mv.addObject("loanAmount", new ContractController().getLoan((String) req.getSession().getAttribute("address")));
+        String add = (String) req.getSession().getAttribute("address");
+        System.out.println("get loan address:" + add);
+        int val = contractUtil.getLoan(add);
+        mv.addObject("loanAmount", "" + val);
         return mv;
     }
     @RequestMapping(value = "download", method = RequestMethod.GET)

@@ -7,6 +7,7 @@ import com.app.util.Receipt;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.tuples.generated.Tuple5;
 import org.fisco.bcos.web3j.tuples.generated.Tuple6;
+import org.fisco.bcos.web3j.tuples.generated.Tuple7;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,10 +56,11 @@ public class TListController {
             int r_num = fin.r_num().send().intValue();
             for (int i = 0; i < r_num; i ++ ) {
                 BigInteger bi = new BigInteger(String.valueOf(i));
-                Tuple6<String, String, String, String, BigInteger, BigInteger> re =  fin.receipts(bi).send();
-                int mount = re.getValue5().intValue();
-                int state = re.getValue6().intValue();
-                li.add(new Receipt(re.getValue1(), re.getValue2(),re.getValue3(),re.getValue4(),mount, StateType.stringValue(state)
+                Tuple7<String, String, String, String, BigInteger, BigInteger, BigInteger> re =  fin.receipts(bi).send();
+                int origin = re.getValue5().intValue();
+                int mount = re.getValue6().intValue();
+                int state = re.getValue7().intValue();
+                li.add(new Receipt(re.getValue1(), re.getValue2(),re.getValue3(),re.getValue4(), origin, mount, StateType.stringValue(state)
                 ));
             }
         } catch (Exception e) {
@@ -70,7 +72,7 @@ public class TListController {
         List<Company> li = new ArrayList<Company>();
         try {
             int c_num = fin.c_num().send().intValue();
-            for (int i = 0; i < c_num; i ++ ) {
+            for (int i = 1; i < c_num; i ++ ) {
                 BigInteger bi = new BigInteger(String.valueOf(i));
                 Tuple5<String, String, String, BigInteger, String> re =  fin.companys(bi).send();
                 int state = re.getValue4().intValue();

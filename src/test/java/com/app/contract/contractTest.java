@@ -9,6 +9,8 @@ import com.app.controller.TListController;
 import com.app.solidity.Finance;
 import com.app.solidity.HelloWorld;
 import com.app.util.*;
+import org.fisco.bcos.channel.client.Service;
+import org.fisco.bcos.channel.event.filter.EventLogFilterManager;
 import org.fisco.bcos.web3j.crypto.Credentials;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.core.RemoteCall;
@@ -55,9 +57,9 @@ public class contractTest {
                 ContractController cc = new ContractController();
                 System.out.println("fin address is: " + fin.getContractAddress());
                 // call set function
-                TransactionReceipt result1 = fin.addCrediableCompany(a1.getAddress(), "company1", "adress 1", "property").send();
+                //TransactionReceipt result1 = fin.addCrediableCompany(a1.getAddress(), "company1", "adress 1", "property").send();
                 // call get function
-                TransactionReceipt result2 = fin.addCrediableCompany(a2.getAddress(), "company2", "adress 2", "property").send();
+                //TransactionReceipt result2 = fin.addCrediableCompany(a2.getAddress(), "company2", "adress 2", "property").send();
                 TransactionReceipt result3 = fin.brow(a1.getAddress(), a2.getAddress(), BigInteger.valueOf(1000)).send();
                 fin.brow(a1.getAddress(), a2.getAddress(), BigInteger.valueOf(1000)).send();
                 fin.brow(a1.getAddress(), a2.getAddress(), BigInteger.valueOf(1000)).send();
@@ -70,7 +72,6 @@ public class contractTest {
                 for (Receipt re : rl) {
                     System.out.println(re.from + re.to + re.mount);
                 }
-                System.out.println(cc.getReturn(result5));
                 System.out.println(result4.getValue1());
             }
         } catch (Exception e) {
@@ -84,26 +85,18 @@ public class contractTest {
         a1.getAccount(false, "");
         GenerateAccount a2 = new GenerateAccount();
         a2.getAccount(false, "");
-        TransactionReceipt result1 = fin.addCrediableCompany(a1.getAddress(), "company1", "adress 1", "property").send();
+        TransactionDecoder txDecodeSampleDecoder =  TransactionDecoderFactory.buildTransactionDecoder(Finance.ABI, "");
+        fin.addUnknowCompany(a1.getAddress(), "company1", "adress 1", "property").send();
         // call get function
-        TransactionReceipt result2 = fin.addCrediableCompany(a2.getAddress(), "company2", "adress 2", "property").send();
-        System.out.println(a1.getAddress().length());
-        String name = "masterbank";
-        try {
-            int c = fin.c_num().send().intValue();
-            for (int i = 0; i < c; i ++ ) {
-                BigInteger bi = new BigInteger(String.valueOf(i));
-                Tuple5<String, String, String, BigInteger, String> cp = fin.companys(bi).send();
-                System.out.println(cp.getValue1());
-                if (cp.getValue1().equals(name)) {
-
-                    System.out.println("find: " + cp.getValue5());
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        fin.addUnknowCompany(a2.getAddress(), "company2", "adress 2", "property").send();
+        Service service = new Service();
+        EventLogFilterManager efm =  service.getEventLogFilterManager();
+        //TransactionReceipt result1 = fin.brow(a1.getAddress(), a2.getAddress(), BigInteger.valueOf(1000)).send();
+        fin.brow(a1.getAddress(), a2.getAddress(), BigInteger.valueOf(1000)).send();
+        fin.brow(a1.getAddress(), a2.getAddress(), BigInteger.valueOf(1000)).send();
+        TransactionReceipt result2 = fin.brow(a1.getAddress(), a2.getAddress(), BigInteger.valueOf(1000)).send();
+        String mapResult = txDecodeSampleDecoder.decodeEventReturnJson(result2.getLogs());
+        System.out.println(mapResult);
     }
     public Finance deploy(){
         Finance contract = null;
@@ -124,9 +117,9 @@ public class contractTest {
         GenerateAccount a2 = new GenerateAccount();
         a2.getAccount(false, "");
         // call set function
-        TransactionReceipt result1 = fin.addCrediableCompany(a1.getAddress(), "company1", "adress 1", "property").send();
+        //TransactionReceipt result1 = fin.addCrediableCompany(a1.getAddress(), "company1", "adress 1", "property").send();
         // call get function
-        TransactionReceipt result2 = fin.addCrediableCompany(a2.getAddress(), "company2", "adress 2", "property").send();
+        //TransactionReceipt result2 = fin.addCrediableCompany(a2.getAddress(), "company2", "adress 2", "property").send();
         fin.brow(a1.getAddress(), a2.getAddress(), BigInteger.valueOf(1000)).send();
     }
     @Test

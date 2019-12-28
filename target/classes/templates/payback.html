@@ -20,7 +20,7 @@
                 "to": $("#toP").val(),
                 "mount": $("#mountP").val(),
             }, success:function(msg) {
-                alert(msg);
+                alert(msg.msg);
                 location.reload();
             }, error:function(msg) {
                 alert(msg);

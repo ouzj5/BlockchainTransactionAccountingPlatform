@@ -28,13 +28,15 @@ import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RestController
 public class LoginController {
     @Autowired
-    Finance finance;
+    ContractUtil contractUtil;
     @RequestMapping(value ="login", method = RequestMethod.GET)
     public ModelAndView login(HttpServletRequest req) {
         ModelAndView mv = new ModelAndView();
@@ -43,8 +45,9 @@ public class LoginController {
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public ResponseEntity<Object> home(HttpServletRequest req,@RequestParam(name = "file", defaultValue = "xxx") MultipartFile file,
-                                       @RequestParam(name = "password", defaultValue = "xxx")String password) {
+    public ResponseEntity<Map<String, Object>> home(HttpServletRequest req, @RequestParam(name = "file", defaultValue = "xxx") MultipartFile file,
+                                                    @RequestParam(name = "password", defaultValue = "xxx")String password) {
+        Map<String, Object> map = new HashMap<String, Object>();
         try {
             String filename = URLEncoder.encode(file.getOriginalFilename(), "utf-8");
             File file2 = new File("src/main/resources/accounts/"+filename);
@@ -69,25 +72,39 @@ public class LoginController {
                 } else if (format.equals("p12")){
                     credentials = loadP12Account(filename, password);
                 } else {
-                    return new ResponseEntity<Object>("文件格式错误", HttpStatus.FORBIDDEN);
+                    map.put("status", "error");
+                    map.put("msg", "文件格式错误");
+                    return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
                 }
-                if (credentials == null)
-                    return new ResponseEntity<Object>("文件格式错误", HttpStatus.FORBIDDEN);
+                if (credentials == null) {
+                    map.put("status", "error");
+                    map.put("msg", "文件格式错误");
+                    return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+                }
             } catch (Exception e) {
                 System.out.println("login failed");
-                System.out.println(e);
-                return new ResponseEntity<Object>("文件格式错误", HttpStatus.FORBIDDEN);
+                e.printStackTrace();
+                map.put("status", "error");
+                map.put("msg", "文件格式错误");
+                return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
             }
             System.out.println("login adress: " + address);
-
+            String name = contractUtil.addressToName(address);
+            if (name == null) {
+                map.put("status", "error");
+                map.put("msg", "用户名未注册");
+                return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+            }
             req.getSession().setAttribute("PrKey", "accounts/" + filename);
             req.getSession().setAttribute("address", filename);
-            req.getSession().setAttribute("company", addressToName(address));
+            req.getSession().setAttribute("company", name);
         } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println("lgoin post");
-        return new ResponseEntity<Object>("登录成功", HttpStatus.OK);
+        map.put("status", "success");
+        map.put("msg", "登录成功");
+        return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
     }
     private Credentials loadPemAccount(String filename)
             throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException,
@@ -113,9 +130,5 @@ public class LoginController {
         System.out.println(credentials.getAddress());
         return credentials;
     }
-    public String addressToName(String address) throws Exception {
-        BigInteger bi =  finance.companysMap(address).send();
-        Tuple5<String, String, String, BigInteger, String> n = finance.companys(bi).send();
-        return n.getValue1();
-    }
+
 }

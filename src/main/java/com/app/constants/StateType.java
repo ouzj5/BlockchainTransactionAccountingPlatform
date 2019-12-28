@@ -6,6 +6,7 @@ public class StateType {
     public static final int DISABLE = 2;
     public static final int LOAN = 3;
     public static final int PAYBACK = 4;
+    public static final int BANK = 5;
     public static String stringValue(int state){
         if (state == UNKNOW){
             return "unknow";
@@ -17,6 +18,8 @@ public class StateType {
             return "loan";
         } else if (state == PAYBACK) {
             return "payback";
+        } else if (state == BANK) {
+            return "bank";
         }
         return "null";
     }

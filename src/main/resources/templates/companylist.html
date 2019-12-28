@@ -17,6 +17,40 @@
 <div th:fragment="content">
     <script>
     $("#Mycplist").addClass("active");
+    function modifyCompany(address) {
+        url = 'modifyCompany'
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                "address": address,
+            }, success:function(msg) {
+                alert(msg.msg);
+                location.reload();
+            }, error:function(msg) {
+                console.log(msg);
+                alert(msg.body);
+                location.reload();
+            }
+        });
+    }
+    function delCompany(address) {
+        url = 'delCompany'
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                "address": address,
+            }, success:function(msg) {
+                alert(msg.msg);
+                location.reload();
+            }, error:function(msg) {
+                console.log(msg);
+                alert(msg.body);
+                location.reload();
+            }
+        });
+    }
 </script>
     <table class="table table-striped">
         <caption>公司信息</caption>
@@ -27,6 +61,7 @@
             <th>公司性质</th>
             <th>信用等级</th>
             <th>区块链id地址</th>
+            <th>操作</th>
         </tr>
         </thead>
         <tbody>
@@ -36,6 +71,10 @@
             <td th:text="${re.property}">
             <td th:text="${re.credit}">
             <td th:text="${re.address}">
+            <td>
+            <a th:if="${re.credit} != 'bank'" th:onclick="modifyCompany([[${re.address}]])">修改状态</a>
+            <a th:if="(${re.credit} != 'bank' or ${company} == 'masterbank') and ${re.name} != 'masterbank'" th:onclick="delCompany([[${re.address}]])">删除</a>
+            </td>
         </tr>
         </tbody>
     </table>

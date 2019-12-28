@@ -55,9 +55,14 @@
                  processData: false,
                  contentType: false,
                  data: fd,
-                 success: function(data) {
-                    alert(data);
-                    window.location.href = "home";
+                 success: function(msg) {
+                    alert(msg.msg);
+                    if (msg.status == "success") {
+                        window.location.href = "home";
+                    }
+                    else {
+                        location.reload();
+                    }
                  }
             })
            }
