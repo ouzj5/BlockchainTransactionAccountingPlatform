@@ -56,7 +56,7 @@ public class ContractUtil {
                 System.out.println("get loan arg null");
                 return num;
             }
-            TransactionReceipt re = finance.getLoan(fileToAddress(add_from)).send();
+            TransactionReceipt re = finance.getLoan(add_from).send();
             num = getIntReturn(re).intValue();
             System.out.println("get loan: " + num);
         } catch (Exception e) {

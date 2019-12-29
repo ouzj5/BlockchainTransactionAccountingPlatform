@@ -56,7 +56,7 @@ public class ContractController {
                 map.put("msg", "地址已经使用过");
                 return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
             }
-            TransactionReceipt tr = finance.addCrediableCompany(contractUtil.fileToAddress((String) req.getSession().getAttribute("address")), address, name, ad, property, new BigInteger(state)).send();
+            TransactionReceipt tr = finance.addCrediableCompany((String) req.getSession().getAttribute("address"), address, name, ad, property, new BigInteger(state)).send();
             if  (!contractUtil.getBooleanReturn(tr)) {
                 map.put("status", "error");
                 map.put("msg", "添加失败，没有添加信用公司或银行的权限");
@@ -123,7 +123,7 @@ public class ContractController {
                 map.put("msg", "地址错误，地址长度应为40位");
                 return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
             }
-            TransactionReceipt tr = finance.modifyCompany(contractUtil.fileToAddress((String) req.getSession().getAttribute("address")), address).send();
+            TransactionReceipt tr = finance.modifyCompany((String) req.getSession().getAttribute("address"), address).send();
             if  (!contractUtil.getBooleanReturn(tr)) {
                 map.put("status", "error");
                 map.put("msg", "添加失败，没有修改公司状态权限");
@@ -153,7 +153,7 @@ public class ContractController {
                 map.put("msg", "地址错误，地址长度应为40位");
                 return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
             }
-            TransactionReceipt tr = finance.delCompany(contractUtil.fileToAddress((String) req.getSession().getAttribute("address")), address).send();
+            TransactionReceipt tr = finance.delCompany((String) req.getSession().getAttribute("address"), address).send();
             if  (!contractUtil.getBooleanReturn(tr)) {
                 map.put("status", "error");
                 map.put("msg", "删除失败，没有修改公司状态权限");
@@ -237,8 +237,8 @@ public class ContractController {
         }
         int num = 0;
         try {
-            String add_from = contractUtil.nameToAddress(from);
-            String add_to = contractUtil.nameToAddress(to);
+            String add_from = contractUtil.nameToAddress(to);
+            String add_to = contractUtil.nameToAddress(from);
             if (add_from == null || add_to == null) {
                 map.put("status", "error");
                 map.put("msg", "还款失败，其中一方没有添加");

@@ -55,6 +55,7 @@ public class LoginController {
             out.write(file.getBytes());
             out.flush();
             out.close();
+
             String pstr = "([^.]*).([^.]*)";
             String address = null;
             String format = null;
@@ -68,9 +69,9 @@ public class LoginController {
             Credentials credentials;
             try {
                 if (format.equals("pem")) {
-                    credentials = loadPemAccount(filename);
+                    credentials = loadPemAccount(file2);
                 } else if (format.equals("p12")){
-                    credentials = loadP12Account(filename, password);
+                    credentials = loadP12Account(file2, password);
                 } else {
                     map.put("status", "error");
                     map.put("msg", "文件格式错误");
@@ -88,15 +89,15 @@ public class LoginController {
                 map.put("msg", "文件格式错误");
                 return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
             }
-            System.out.println("login adress: " + address);
-            String name = contractUtil.addressToName(address);
+            System.out.println("login adress: " + credentials.getAddress());
+            String name = contractUtil.addressToName(credentials.getAddress());
             if (name == null) {
                 map.put("status", "error");
                 map.put("msg", "用户名未注册");
                 return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
             }
             req.getSession().setAttribute("PrKey", "accounts/" + filename);
-            req.getSession().setAttribute("address", filename);
+            req.getSession().setAttribute("address", credentials.getAddress());
             req.getSession().setAttribute("company", name);
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,25 +107,24 @@ public class LoginController {
         map.put("msg", "登录成功");
         return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
     }
-    private Credentials loadPemAccount(String filename)
+    private Credentials loadPemAccount(File file)
             throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException,
             NoSuchProviderException, InvalidKeySpecException, UnrecoverableKeyException {
         PEMManager pem = new PEMManager();
-        pem.setPemFile("classpath:/accounts/" + filename);
-        pem.load();
+        //pem.setPemFile("accounts/" + filename);
+        pem.load(new FileInputStream(file));
         ECKeyPair keyPair = pem.getECKeyPair();
-        System.out.println(keyPair.getPrivateKey().toString(16));
+        System.out.println("load pr key: "+keyPair.getPrivateKey().toString(16));
         Credentials credentials = GenCredential.create(keyPair.getPrivateKey().toString(16));
         System.out.println(credentials.getAddress());
         return credentials;
     }
-    private Credentials loadP12Account(String filename, String password)
+    private Credentials loadP12Account(File file, String password)
             throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException,
             NoSuchProviderException, InvalidKeySpecException, UnrecoverableKeyException {
         P12Manager p12Manager = new P12Manager();
-        p12Manager.setP12File("classpath:" + filename);
-        p12Manager.setPassword(password);
-        p12Manager.load();
+        //p12Manager.setP12File("./accounts/" + filename);
+        p12Manager.load(new FileInputStream(file), password);
         ECKeyPair keyPair = p12Manager.getECKeyPair();
         Credentials credentials = GenCredential.create(keyPair.getPrivateKey().toString(16));
         System.out.println(credentials.getAddress());
